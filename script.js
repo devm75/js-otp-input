@@ -17,7 +17,7 @@ const firstBox = document.querySelector(".input-box");
 
 firstBox.focus();
 
-const hanldeKeydown = (e, elementId) => {
+const handleKeydown = (e, elementId) => {
     if (e.code === KEYBOARD_KEYS.BACKSPACE_KEY) {
         e.preventDefault();
         if (e.target.value) {
@@ -80,7 +80,7 @@ const getElementAndId = (e) => {
         };
     }
 };
-const hanldeInputChange = (e, elementId) => {
+const handleInputChange = (e, elementId) => {
     if (e?.data) {
         if (e?.data?.length > 1) return;
         const value = e.target.value;
@@ -95,7 +95,7 @@ const hanldeInputChange = (e, elementId) => {
     }
 };
 
-const hanldePasting = (event, pasteText, elementId) => {
+const handlePasting = (event, pasteText, elementId) => {
     const startIndex = Number(elementId?.split("-")[1]);
 
     const requiredELements = [];
@@ -121,9 +121,9 @@ inputContainer.addEventListener(
     "input",
     (e) => {
         const { element, elementId } = getElementAndId(e);
-        hanldeInputChange(e, elementId);
+        handleInputChange(e, elementId);
         element.addEventListener("keydown", (e) => {
-            hanldeKeydown(e, elementId);
+            handleKeydown(e, elementId);
         });
     },
 
@@ -155,7 +155,7 @@ inputContainer.addEventListener(
                 }
             });
 
-        if (!errorInString) hanldePasting(e, pasteText, elementId);
+        if (!errorInString) handlePasting(e, pasteText, elementId);
     },
     true
 );
