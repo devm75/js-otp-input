@@ -1,0 +1,166 @@
+const inputContainer = document.querySelector(".text-input-container");
+const CODE = [];
+const INPUT_CLASS = "input-box";
+const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const KEYBOARD_KEYS = {
+    BACKSPACE_KEY: "Backspace",
+    ARROW_LEFT: "ArrowLeft",
+    ARROW_RIGHT: "ArrowRight",
+    DIGITS: "Digit",
+};
+
+const LEFT = "left";
+const RIGHT = "right";
+let currentActiveInput = null;
+
+const firstBox = document.querySelector(".input-box");
+firstBox.focus();
+
+const hanldeKeydown = (e, elementId) => {
+    if (e.code === KEYBOARD_KEYS.BACKSPACE_KEY) {
+        e.preventDefault();
+        if (e.target.value) {
+            e.target.value = "";
+            return;
+        }
+
+        //
+        if (!e.target.value) {
+            moveToPreviousInputBox(elementId, e);
+        }
+    }
+
+    if (e.code === KEYBOARD_KEYS.ARROW_LEFT) {
+        moveToPreviousInputBox(elementId);
+    }
+    if (e.code === KEYBOARD_KEYS.ARROW_RIGHT) {
+        moveToNextInputBox(elementId);
+    }
+    if (e.code.includes(KEYBOARD_KEYS.DIGITS)) {
+        e.preventDefault();
+        const value = e.code.split("Digit")?.[1];
+        e.target.value = value;
+        moveToNextInputBox(elementId);
+    }
+    console.log("I ran");
+};
+
+const extractSiblingId = (currentId, siblingSide) => {
+    if (siblingSide === RIGHT) {
+        return currentId.split("-")[0] + "-" + Number(+currentId.split("-")[1] + 1);
+    } else if (siblingSide === LEFT) {
+        return currentId.split("-")[0] + "-" + Number(+currentId.split("-")[1] - 1);
+    }
+};
+
+const moveToNextInputBox = (currentId) => {
+    if (Number(currentId.split("-")?.[1]) === 5) return;
+
+    const nextElementId = extractSiblingId(currentId, RIGHT);
+    const nextElement = document.getElementById(nextElementId);
+    nextElement.focus();
+};
+
+const moveToPreviousInputBox = (currentId) => {
+    if (Number(currentId.split("-")?.[1]) === 1) return;
+
+    const prevElementId = extractSiblingId(currentId, LEFT);
+    const prevElement = document.getElementById(prevElementId);
+    prevElement.focus();
+};
+
+const getElementAndId = (e) => {
+    if (e.target.className === INPUT_CLASS) {
+        const element = e.target;
+        const elementId = e.target.id;
+
+        return {
+            element,
+            elementId,
+        };
+    }
+};
+const hanldeInputChange = (e, elementId) => {
+    if (e?.data) {
+        if (e?.data?.length > 1) return;
+        const value = e.target.value;
+        const regex = /^[0-9]?$/;
+
+        if (!regex.test(value)) {
+            e.target.value = value.slice(0, -1);
+            // Remove the last entered character if it's not numeric
+            if (nums.includes(value)) moveToNextInputBox(elementId);
+        }
+        if (nums.includes(value)) moveToNextInputBox(elementId);
+    }
+};
+
+const hanldePasting = (event, pasteText, elementId) => {
+    // console.log(event, text)
+    const startIndex = Number(elementId?.split("-")[1]);
+
+    const requiredELements = [];
+    for (i = startIndex; i <= 5; i++) {
+        const ele = document.getElementById(`input-${i}`);
+        console.log(ele);
+        requiredELements.push(ele);
+    }
+    requiredELements.forEach((ele, index) => {
+        if (pasteText[index]) {
+            ele.value = pasteText[index];
+            moveToNextInputBox(ele?.id);
+        }
+    });
+};
+
+const showInputError = (e) => {
+    e.stopPropagation();
+    const errorElement = document.querySelector(".error");
+    errorElement.textContent =
+        "Please Enter a valid Input, Only Numeric Values are allowed!";
+};
+inputContainer.addEventListener(
+    "input",
+    (e) => {
+        const { element, elementId } = getElementAndId(e);
+        hanldeInputChange(e, elementId);
+        element.addEventListener("keydown", (e) => {
+            hanldeKeydown(e, elementId);
+        });
+    },
+
+    true
+);
+
+inputContainer.addEventListener(
+    "paste",
+    (e) => {
+        const { element, elementId } = getElementAndId(e);
+
+        console.log(e, "pasteEvent");
+        let pasteText = (e.clipboardData || window?.clipboardData).getData("text");
+        e.preventDefault();
+
+        // if pasted content has alphabets, we dont allow pasting and show a warning
+        // message that alphabets not allowed.
+        const errorInString =
+            pasteText
+                .split("")
+                .map((ele) => nums.includes(ele))
+                .filter((ele) => !ele).length > 0;
+
+        console.log(errorInString, "error in string");
+        pasteText
+            .split("")
+            .filter((ele) => ele)
+            .forEach((ele) => {
+                if (!nums.includes(ele)) {
+                    showInputError(e);
+                }
+            });
+
+        if (!errorInString) hanldePasting(e, pasteText, elementId);
+    },
+    true
+);
+
