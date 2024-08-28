@@ -1,11 +1,13 @@
 const inputContainer = document.querySelector(".text-input-container");
 const INPUT_CLASS = "input-box";
+const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const KEY_CODES = {
     BACKSPACE_KEY: "Backspace",
     ARROW_LEFT: "ArrowLeft",
     ARROW_RIGHT: "ArrowRight",
     DIGITS: "Digit",
 };
+
 const LEFT = "left";
 const RIGHT = "right";
 const clearButton = document.querySelector('.clear-btn');
@@ -15,7 +17,7 @@ const firstBox = document.querySelector(".input-box");
 firstBox.focus();
 
 const handleKeydown = (e, elementId) => {
-    if (e.code === KEYBOARD_KEYS.BACKSPACE_KEY) {
+    if (e.code === KEY_CODES.BACKSPACE_KEY) {
         e.preventDefault();
         if (e.target.value) {
             e.target.value = "";
@@ -28,13 +30,13 @@ const handleKeydown = (e, elementId) => {
         }
     }
 
-    if (e.code === KEYBOARD_KEYS.ARROW_LEFT) {
+    if (e.code === KEY_CODES.ARROW_LEFT) {
         moveToPreviousInputBox(elementId);
     }
-    if (e.code === KEYBOARD_KEYS.ARROW_RIGHT) {
+    if (e.code === KEY_CODES.ARROW_RIGHT) {
         moveToNextInputBox(elementId);
     }
-    if (e.code.includes(KEYBOARD_KEYS.DIGITS)) {
+    if (e.code.includes(KEY_CODES.DIGITS)) {
         e.preventDefault();
         const value = e.code.split("Digit")?.[1];
         e.target.value = value;
@@ -78,9 +80,6 @@ const getElementAndId = (e) => {
     }
 };
 const handleInputChange = (e, elementId) => {
-
-    const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-
     if (e?.data) {
         if (e?.data?.length > 1) return;
         const value = e.target.value;
@@ -122,11 +121,7 @@ inputContainer.addEventListener(
     (e) => {
         const { element, elementId } = getElementAndId(e);
         handleInputChange(e, elementId);
-        element.addEventListener("keydown", (e) => {
-            handleKeydown(e, elementId);
-        });
     },
-
     true
 );
 
@@ -134,7 +129,6 @@ inputContainer.addEventListener(
     "paste",
     (e) => {
         const { element, elementId } = getElementAndId(e);
-        const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
         let pasteText = (e.clipboardData || window?.clipboardData).getData("text");
         e.preventDefault();
@@ -161,7 +155,13 @@ inputContainer.addEventListener(
     true
 );
 
+inputContainer.addEventListener('keydown', (e) => {
+    const { elementId } = getElementAndId(e);
+    handleKeydown(e, elementId);
+}, true)
+
 clearButton.addEventListener('click', () => {
     document.querySelectorAll('.input-box').forEach(ele => ele.value = "");
     firstBox.focus();
 })
+
