@@ -1,14 +1,11 @@
 const inputContainer = document.querySelector(".text-input-container");
-const CODE = [];
 const INPUT_CLASS = "input-box";
-const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-const KEYBOARD_KEYS = {
+const KEY_CODES = {
     BACKSPACE_KEY: "Backspace",
     ARROW_LEFT: "ArrowLeft",
     ARROW_RIGHT: "ArrowRight",
     DIGITS: "Digit",
 };
-
 const LEFT = "left";
 const RIGHT = "right";
 const clearButton = document.querySelector('.clear-btn');
@@ -81,6 +78,9 @@ const getElementAndId = (e) => {
     }
 };
 const handleInputChange = (e, elementId) => {
+
+    const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
     if (e?.data) {
         if (e?.data?.length > 1) return;
         const value = e.target.value;
@@ -134,6 +134,7 @@ inputContainer.addEventListener(
     "paste",
     (e) => {
         const { element, elementId } = getElementAndId(e);
+        const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
         let pasteText = (e.clipboardData || window?.clipboardData).getData("text");
         e.preventDefault();
