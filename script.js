@@ -11,9 +11,10 @@ const KEYBOARD_KEYS = {
 
 const LEFT = "left";
 const RIGHT = "right";
-let currentActiveInput = null;
-
+const clearButton = document.querySelector('.clear-btn');
 const firstBox = document.querySelector(".input-box");
+
+
 firstBox.focus();
 
 const hanldeKeydown = (e, elementId) => {
@@ -42,7 +43,6 @@ const hanldeKeydown = (e, elementId) => {
         e.target.value = value;
         moveToNextInputBox(elementId);
     }
-    console.log("I ran");
 };
 
 const extractSiblingId = (currentId, siblingSide) => {
@@ -96,13 +96,11 @@ const hanldeInputChange = (e, elementId) => {
 };
 
 const hanldePasting = (event, pasteText, elementId) => {
-    // console.log(event, text)
     const startIndex = Number(elementId?.split("-")[1]);
 
     const requiredELements = [];
     for (i = startIndex; i <= 5; i++) {
         const ele = document.getElementById(`input-${i}`);
-        console.log(ele);
         requiredELements.push(ele);
     }
     requiredELements.forEach((ele, index) => {
@@ -137,7 +135,6 @@ inputContainer.addEventListener(
     (e) => {
         const { element, elementId } = getElementAndId(e);
 
-        console.log(e, "pasteEvent");
         let pasteText = (e.clipboardData || window?.clipboardData).getData("text");
         e.preventDefault();
 
@@ -149,7 +146,6 @@ inputContainer.addEventListener(
                 .map((ele) => nums.includes(ele))
                 .filter((ele) => !ele).length > 0;
 
-        console.log(errorInString, "error in string");
         pasteText
             .split("")
             .filter((ele) => ele)
@@ -164,3 +160,7 @@ inputContainer.addEventListener(
     true
 );
 
+clearButton.addEventListener('click', () => {
+    document.querySelectorAll('.input-box').forEach(ele => ele.value = "");
+    firstBox.focus();
+})

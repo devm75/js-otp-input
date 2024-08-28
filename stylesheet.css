@@ -9,15 +9,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: antiquewhite;
+}
+
+.heading {
+  color: white;
 }
 .inner-container {
   height: fit-content;
   margin: auto;
   width: fit-content;
   text-align: center;
-  border: 2px solid rgb(117, 107, 107);
+  border: 2px solid white;
+  border-radius: 10px;
   padding: 30px;
-  background-color: #f3f3f3;
+  background-color: #bd5050;
 }
 
 .text-input-container {
@@ -55,6 +61,7 @@ input:focus {
   display: flex;
   justify-content: center;
   align-items: center;
+  color: white;
 }
 
 .error {
@@ -68,4 +75,7 @@ input:focus {
   margin-top: 42px;
   width: 100px;
   padding: 6px;
+  outline: none;
+  border: none;
+  background-color: white;
 }
