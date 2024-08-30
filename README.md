@@ -1,2 +1,2 @@
 Simple OTP input field using vanilla Javscript
-[Live](https://www.mohandev.in/otp-input/)
+[Live](https://www.mohandev.in/js-otp-input/)
