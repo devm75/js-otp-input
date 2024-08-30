@@ -30,6 +30,7 @@
   display: flex;
   gap: 16px;
   padding-top: 60px;
+  flex-wrap: wrap;
 }
 
 .input-box {
